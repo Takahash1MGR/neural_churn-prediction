@@ -1,0 +1,22 @@
+artifact_path: file:///c:/Users/Munir/Documents/pythonfiles/neural_churn_prediction/notebooks/mlruns/1/models/m-4e88641d2e214226a7b63ea6c06ce48f/artifacts
+flavors:
+  python_function:
+    data: model.ubj
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.11.0
+  xgboost:
+    code: null
+    data: model.ubj
+    model_class: xgboost.sklearn.XGBClassifier
+    model_format: ubj
+    xgb_version: 3.2.0
+mlflow_version: 3.10.1
+model_id: m-4e88641d2e214226a7b63ea6c06ce48f
+model_size_bytes: 291167
+model_uuid: m-4e88641d2e214226a7b63ea6c06ce48f
+prompts: null
+run_id: 1cc9a493075444ef8552fbb982e33b83
+utc_time_created: '2026-03-26 20:39:00.859878'

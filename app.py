@@ -3,24 +3,24 @@ import pandas as pd
 import numpy as np
 import pickle
 import plotly.express as px
-import xgboost as xgb  # 🔥 НОВЫЙ!
-from xgboost import XGBClassifier
+import xgboost as xgb 
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 
 # Загрузка моделей
 @st.cache_resource
 def load_models():
-    xgb = pickle.load(open('models/xgb_v2.pkl', 'rb'))
-    scaler = pickle.load(open('models/scaler.pkl', 'rb'))
-    tokenizer = pickle.load(open('models/tokenizer.pkl', 'rb'))
-    text_cnn = load_model('models/text_cnn.h5')
+    xgb = pickle.load(open('notebooks/models/xgb_v2.pkl', 'rb'))
+    scaler = pickle.load(open('notebooks/models/scaler.pkl', 'rb'))
+    tokenizer = pickle.load(open('notebooks/models/tokenizer.pkl', 'rb'))
+    text_cnn = load_model('notebooks/models/text_cnn.h5')
     return xgb, scaler, tokenizer, text_cnn 
 
 xgb_model, scaler_model, text_tokenizer, text_cnn = load_models()
 
 st.title("🎯 Churn Prediction Dashboard")
 st.markdown("### Предсказание оттока клиентов + анализ сентимента отзывов")
+st.write("hello")
 
 
 # Sidebar для ввода
@@ -55,7 +55,7 @@ if st.sidebar.button("🔮 Предсказать отток", type="primary"):
     review_pad = pad_sequences(review_seq, maxlen=20)
     sentiment = text_cnn.predict(review_pad)[0][0]
     
-    # 🔥 DataFrame БЕЗ проблемных фич
+    
     input_data = pd.DataFrame([{
         'gender_Male': 1 if gender == 'Male' else 0,
         'SeniorCitizen': int(senior),
@@ -92,6 +92,9 @@ if st.sidebar.button("🔮 Предсказать отток", type="primary"):
     booster = xgb_model.get_booster()
     dmatrix = xgb.DMatrix(input_data)
     prob = booster.predict(dmatrix)[0]
+    
+    # input_scaled = scaler_model.transform(input_data)
+    # prob = xgb_model.predict_proba(input_scaled)[0][0]
     
     
     st.metric("🎲 Вероятность оттока", f"{prob:.1%}")
