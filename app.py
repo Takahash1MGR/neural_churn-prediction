@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import pickle
 import plotly.express as px
 import xgboost as xgb 
@@ -18,13 +17,12 @@ def load_models():
 
 xgb_model, scaler_model, text_tokenizer, text_cnn = load_models()
 
-st.title("🎯 Churn Prediction Dashboard")
+st.title("Churn Prediction Dashboard")
 st.markdown("### Предсказание оттока клиентов + анализ сентимента отзывов")
-st.write("hello")
 
 
 # Sidebar для ввода
-st.sidebar.header("📊 Введите данные клиента")
+st.sidebar.header("Введите данные клиента: ")
 gender = st.sidebar.selectbox("Пол", ['Male', 'Female'])
 senior = st.sidebar.selectbox("Senior Citizen", ['0', '1'])
 partner = st.sidebar.selectbox("Partner", ['Yes', 'No'])
@@ -49,7 +47,7 @@ streaming_tv = st.sidebar.selectbox("Streaming TV", ['Yes', 'No', 'No internet s
 streaming_movies = st.sidebar.selectbox("Streaming Movies", ['Yes', 'No', 'No internet service'])
 total_charges = st.sidebar.slider("Total Charges ($)", 0.0, 8684.0, 1000.0)
 
-if st.sidebar.button("🔮 Предсказать отток", type="primary"):
+if st.sidebar.button("Предсказать отток", type="primary"):
     # Сентимент (вычисляем отдельно)
     review_seq = text_tokenizer.texts_to_sequences([review])
     review_pad = pad_sequences(review_seq, maxlen=20)
@@ -97,20 +95,20 @@ if st.sidebar.button("🔮 Предсказать отток", type="primary"):
     # prob = xgb_model.predict_proba(input_scaled)[0][0]
     
     
-    st.metric("🎲 Вероятность оттока", f"{prob:.1%}")
-    st.success("✅ Низкий риск" if prob < 0.5 else "⚠️ Высокий риск")
-    st.info(f"💭 Сентимент: {sentiment:.2f}")
+    st.metric("Вероятность оттока", f"{prob:.1%}")
+    st.success("Низкий риск" if prob < 0.5 else "Высокий риск")
+    st.info(f"Сентимент: {sentiment:.2f}")
 
 
 
 # Загрузка данных для графиков
 df_test = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 col1, col2 = st.columns(2)
-col1.metric("👥 Всего клиентов", len(df_test))
-col1.metric("📉 % оттока", f"{df_test['Churn'].value_counts(normalize=True)['Yes']:.1%}")
+col1.metric("Всего клиентов", len(df_test))
+col1.metric("% оттока", f"{df_test['Churn'].value_counts(normalize=True)['Yes']:.1%}")
 
 # Feature importance
-st.subheader("📈 Топ факторов оттока")
+st.subheader("Топ факторов оттока")
 importances_df = pd.read_csv('notebooks/feature_importance.csv')  # сохрани ранее
 fig = px.bar(importances_df.head(10), x='importance', y='feature', orientation='h')
 st.plotly_chart(fig)
